@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Task, TaskFormData, Status, ChecklistItem } from '../types';
+import { Task, TaskFormData, Status, ChecklistItem, StorageData, CURRENT_SCHEMA_VERSION } from '../types';
 import { calculatePriority } from '../utils/priority';
-
-const STORAGE_KEY = 'zen-productivity-tasks';
+import { shouldBreakDown } from '../utils/priority';
+import { migrateStorageData } from '../utils/migration';
+import { useAuth } from '../contexts/AuthContext';
+import { StorageAdapter } from '../lib/storage/StorageAdapter';
+import { LocalStorageAdapter } from '../lib/storage/LocalStorageAdapter';
+import { SupabaseAdapter } from '../lib/storage/SupabaseAdapter';
 
 const seedTasks: Task[] = [
   {
     id: '1',
     title: 'Forzouk – discriminar serviços + notas',
-    domain: 'Grana',
+    domain: 'Finanças',
     impact: 5,
     urgency: 4,
     emotionalCost: 4,
@@ -22,7 +26,7 @@ const seedTasks: Task[] = [
   {
     id: '2',
     title: 'Agendar Espaço Laser',
-    domain: 'Vida',
+    domain: 'Pessoal',
     impact: 2,
     urgency: 3,
     emotionalCost: 1,
@@ -35,7 +39,7 @@ const seedTasks: Task[] = [
   {
     id: '3',
     title: 'Verificar FGC',
-    domain: 'Grana',
+    domain: 'Finanças',
     impact: 3,
     urgency: 2,
     emotionalCost: 1,
@@ -48,7 +52,7 @@ const seedTasks: Task[] = [
   {
     id: '4',
     title: 'Reembolso Fever',
-    domain: 'Grana',
+    domain: 'Finanças',
     impact: 3,
     urgency: 5,
     emotionalCost: 2,
@@ -62,21 +66,45 @@ const seedTasks: Task[] = [
 ];
 
 export function useTasks() {
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored);
-    }
-    return seedTasks;
-  });
+  const { user, isConfigured } = useAuth();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [adapter, setAdapter] = useState<StorageAdapter>(() => new LocalStorageAdapter());
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-  }, [tasks]);
+    if (isConfigured && user) {
+      setAdapter(new SupabaseAdapter(user.id));
+    } else {
+      setAdapter(new LocalStorageAdapter());
+    }
+  }, [user, isConfigured]);
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      setLoading(true);
+      try {
+        const loaded = await adapter.loadTasks();
+        setTasks(loaded.length > 0 ? loaded : seedTasks);
+      } catch (error) {
+        console.error('Error loading tasks:', error);
+        setTasks(seedTasks);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTasks();
+  }, [adapter]);
+
+  useEffect(() => {
+    if (!loading && tasks.length > 0) {
+      adapter.saveTasks(tasks).catch(console.error);
+    }
+  }, [tasks, adapter, loading]);
 
   const addTask = (formData: TaskFormData) => {
     const newTask: Task = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       ...formData,
       status: 'inbox',
       checklist: [],
@@ -92,15 +120,49 @@ export function useTasks() {
   };
 
   const moveToStatus = (id: string, status: Status) => {
-    setTasks((prev) =>
-      prev.map((task) => {
-        if (task.id === id) {
-          if (status === 'concluida') {
-            return { ...task, status, completedAt: new Date().toISOString() };
-          }
-          return { ...task, status };
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+
+    if (status === 'agora') {
+      const agoraTasks = tasks.filter((t) => t.status === 'agora');
+      if (agoraTasks.length >= 2 && !agoraTasks.some((t) => t.id === id)) {
+        console.warn('Limite de 2 tarefas em AGORA atingido');
+        return;
+      }
+    }
+
+    if (status === 'em_andamento') {
+      const emAndamentoTasks = tasks.filter((t) => t.status === 'em_andamento');
+      if (emAndamentoTasks.length >= 1 && !emAndamentoTasks.some((t) => t.id === id)) {
+        console.warn('Limite de 1 tarefa em EM ANDAMENTO atingido');
+        return;
+      }
+
+      if (shouldBreakDown(task)) {
+        console.warn('Tarefa grande precisa ser quebrada antes de iniciar');
+        return;
+      }
+    }
+
+    if (status === 'concluida') {
+      if (task.checklist.length > 0) {
+        const allCompleted = task.checklist.every((item) => item.completed);
+        if (!allCompleted) {
+          console.warn('Complete todos os itens do checklist antes de concluir');
+          return;
         }
-        return task;
+      }
+    }
+
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === id) {
+          if (status === 'concluida') {
+            return { ...t, status, completedAt: new Date().toISOString() };
+          }
+          return { ...t, status };
+        }
+        return t;
       })
     );
   };
@@ -110,7 +172,7 @@ export function useTasks() {
       prev.map((task) => {
         if (task.id === taskId) {
           const newItem: ChecklistItem = {
-            id: Date.now().toString(),
+            id: crypto.randomUUID(),
             text,
             completed: false,
           };
@@ -142,7 +204,12 @@ export function useTasks() {
   };
 
   const exportData = () => {
-    const dataStr = JSON.stringify(tasks, null, 2);
+    const exportData: StorageData = {
+      schemaVersion: CURRENT_SCHEMA_VERSION,
+      exportedAt: new Date().toISOString(),
+      tasks,
+    };
+    const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
@@ -154,9 +221,8 @@ export function useTasks() {
   const importData = (jsonData: string) => {
     try {
       const imported = JSON.parse(jsonData);
-      if (Array.isArray(imported)) {
-        setTasks(imported);
-      }
+      const migrated = migrateStorageData(imported);
+      setTasks(migrated.tasks);
     } catch (error) {
       console.error('Failed to import data:', error);
     }
@@ -183,6 +249,7 @@ export function useTasks() {
 
   return {
     tasks,
+    loading,
     addTask,
     updateTask,
     moveToStatus,

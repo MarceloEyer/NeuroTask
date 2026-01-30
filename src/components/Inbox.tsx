@@ -12,7 +12,7 @@ export function Inbox() {
 
   const [formData, setFormData] = useState({
     title: '',
-    domain: 'Vida' as Domain,
+    domain: 'Pessoal' as Domain,
     impact: 3,
     urgency: 3,
     emotionalCost: 1,
@@ -25,7 +25,7 @@ export function Inbox() {
   const resetForm = () => {
     setFormData({
       title: '',
-      domain: 'Vida',
+      domain: 'Pessoal',
       impact: 3,
       urgency: 3,
       emotionalCost: 1,
@@ -120,11 +120,15 @@ export function Inbox() {
                 onChange={(e) => setFormData({ ...formData, domain: e.target.value as Domain })}
                 className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
               >
-                <option value="Urgente/Agora">Urgente/Agora</option>
-                <option value="DJ & Carreira">DJ & Carreira</option>
-                <option value="Grana">Grana</option>
-                <option value="Vida">Vida</option>
-                <option value="Incubadora">Incubadora</option>
+                <option value="Trabalho">Trabalho</option>
+                <option value="Finanças">Finanças</option>
+                <option value="Saúde">Saúde</option>
+                <option value="Casa">Casa</option>
+                <option value="Relacionamentos">Relacionamentos</option>
+                <option value="Pessoal">Pessoal</option>
+                <option value="Aprendizado">Aprendizado</option>
+                <option value="Projetos">Projetos</option>
+                <option value="Admin">Admin</option>
               </select>
             </div>
 

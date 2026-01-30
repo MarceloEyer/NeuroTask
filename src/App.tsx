@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { Inbox } from './components/Inbox';
 import { Dashboard } from './components/Dashboard';
+import { LoginModal } from './components/LoginModal';
 import { useTasks } from './hooks/useTasks';
-import { Inbox as InboxIcon, LayoutDashboard, Download, Upload } from 'lucide-react';
+import { useAuth } from './contexts/AuthContext';
+import { Inbox as InboxIcon, LayoutDashboard, Download, Upload, User, LogOut } from 'lucide-react';
 
 function App() {
   const [currentView, setCurrentView] = useState<'inbox' | 'dashboard'>('dashboard');
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { exportData, importData } = useTasks();
+  const { user, signOut, isConfigured } = useAuth();
 
   const handleImport = () => {
     const input = document.createElement('input');
@@ -74,6 +78,28 @@ function App() {
                 >
                   <Upload className="w-4 h-4" />
                 </button>
+
+                {isConfigured && (
+                  <>
+                    {user ? (
+                      <button
+                        onClick={() => signOut()}
+                        className="p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+                        title="Sair"
+                      >
+                        <LogOut className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowLoginModal(true)}
+                        className="p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+                        title="Login"
+                      >
+                        <User className="w-4 h-4" />
+                      </button>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -83,6 +109,8 @@ function App() {
       <main className="pb-8">
         {currentView === 'inbox' ? <Inbox /> : <Dashboard />}
       </main>
+
+      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
     </div>
   );
 }

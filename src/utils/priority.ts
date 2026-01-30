@@ -3,7 +3,7 @@ import { Task } from '../types';
 export function calculatePriority(task: Task): number {
   let priority = (task.impact * 2) + task.urgency - task.emotionalCost;
 
-  if (task.domain === 'Grana') {
+  if (task.domain === 'Finanças') {
     priority += 2;
   }
 
