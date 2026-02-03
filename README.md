@@ -88,26 +88,30 @@ Categoriza a área da vida. Afeta priorização.
 
 | Domínio | Quando usar | Boost de prioridade |
 |---------|-------------|---------------------|
-| **Urgente/Agora** | Emergências, deadlines hoje | Nenhum (já é urgente) |
-| **DJ & Carreira** | Shows, produção, networking | Nenhum |
-| **Grana** 💰 | Pagamentos, cobranças, investimentos | **+2** |
-| **Vida** | Saúde, casa, pessoal | Nenhum |
-| **Incubadora** | Projetos futuros, aprendizado | Nenhum |
+| **Trabalho** | Projetos profissionais, entregas, reuniões | Nenhum |
+| **Finanças** 💰 | Pagamentos, cobranças, investimentos | **+2** |
+| **Saúde** | Médico, exercícios, bem-estar | Nenhum |
+| **Casa** | Limpeza, manutenção, organização | Nenhum |
+| **Relacionamentos** | Família, amigos, networking | Nenhum |
+| **Pessoal** | Hobbies, desenvolvimento pessoal | Nenhum |
+| **Aprendizado** | Cursos, estudos, pesquisa | Nenhum |
+| **Projetos** | Iniciativas pessoais, side projects | Nenhum |
+| **Admin** | Burocracias, documentos, tarefas administrativas | Nenhum |
 
-> **💡 Por que Grana recebe boost?** Tarefas financeiras têm impacto direto e mensurável. O sistema prioriza o que afeta sua estabilidade.
+> **💡 Por que Finanças recebe boost?** Tarefas financeiras têm impacto direto e mensurável. O sistema prioriza o que afeta sua estabilidade.
 
 ---
 
 ##### **📊 Impacto (1-5)**
-Qual o valor desta tarefa para sua carreira/finanças?
+Qual o valor desta tarefa para sua vida/carreira?
 
 | Valor | Significado | Exemplo |
 |-------|-------------|---------|
 | **1** | Mínimo | Organizar pastas |
 | **2** | Baixo | Responder email comum |
-| **3** | Médio | Preparar set list |
-| **4** | Alto | Negociar cachê importante |
-| **5** | Crítico | Fechar contrato grande |
+| **3** | Médio | Preparar apresentação |
+| **4** | Alto | Negociar contrato importante |
+| **5** | Crítico | Fechar acordo decisivo |
 
 **Fórmula**: Impacto tem peso **×2** no cálculo de prioridade.
 
@@ -270,7 +274,7 @@ Sugestões calculadas automaticamente pelo algoritmo de priorização.
 Tarefas organizadas por área da vida.
 
 Clique para expandir/recolher cada seção. Útil para:
-- Trabalhar por contexto (ex: dia focado em "Grana")
+- Trabalhar por contexto (ex: dia focado em "Finanças")
 - Revisar o que tem pendente por área
 - Balance entre diferentes domínios
 
@@ -493,8 +497,8 @@ Exemplo:
 
 ### Boosts Especiais
 
-#### 💰 **Boost de Grana** (+2)
-Aplicado se: `domain === "Grana"`
+#### 💰 **Boost de Finanças** (+2)
+Aplicado se: `domain === "Finanças"`
 
 **Justificativa**: Dinheiro é mensurável e impacta todas áreas da vida. Finanças saudáveis reduzem estresse geral.
 
@@ -511,11 +515,11 @@ Aplicado se: `prazo ≤ 3 dias`
 
 #### Exemplo 1: Tarefa de Alto Impacto
 ```
-Tarefa: "Fechar contrato com promoter internacional"
+Tarefa: "Fechar contrato com cliente internacional"
 - Impacto: 5
 - Urgência: 4
 - Custo Emocional: 2
-- Domínio: DJ & Carreira
+- Domínio: Trabalho
 - Prazo: 5 dias
 
 Cálculo:
@@ -526,13 +530,13 @@ Prioridade: 12 (ALTA)
 
 ---
 
-#### Exemplo 2: Tarefa Emocional
+#### Exemplo 2: Tarefa Emocional Financeira
 ```
-Tarefa: "Cobrar Forzouk por serviços"
+Tarefa: "Cobrar pagamento atrasado de cliente"
 - Impacto: 5
 - Urgência: 4
 - Custo Emocional: 4
-- Domínio: Grana (+2)
+- Domínio: Finanças (+2)
 - Prazo: 2 dias (+2)
 
 Cálculo:
@@ -549,11 +553,11 @@ Status especial: 🧠 EMOCIONAL
 
 #### Exemplo 3: Tarefa Rápida
 ```
-Tarefa: "Verificar FGC"
+Tarefa: "Verificar saldo bancário"
 - Impacto: 3
 - Urgência: 2
 - Custo Emocional: 1
-- Domínio: Grana (+2)
+- Domínio: Finanças (+2)
 - Tags: RÁPIDO 5min
 
 Cálculo:
@@ -609,7 +613,7 @@ Espero que esteja bem. Gostaria de verificar o status de [assunto].
 Podemos alinhar isso?
 
 Abraço,
-Zen
+[Seu nome]
 ```
 
 **Benefícios**:
@@ -909,7 +913,7 @@ Todos os dados salvos automaticamente em `localStorage` do navegador.
 
 ### ⚡ Desbloqueio Rápido (quando travado)
 
-1. Pareio Mode ON
+1. Pareto Mode ON
 2. Escolher por mim
 3. Quebrar primeira tarefa em microtarefas
 4. Fazer apenas primeira microtarefa (5min)
@@ -923,9 +927,9 @@ Todos os dados salvos automaticamente em `localStorage` do navegador.
 
 ### Para começar agora:
 
-1. ✅ Sistema já tem 4 tarefas de exemplo
-2. 🔍 Explore o Dashboard
-3. ➕ Adicione 2-3 tarefas reais no Inbox
+1. ✅ Explore o Dashboard
+2. 🔍 Adicione suas primeiras tarefas no Inbox
+3. ➕ Complete os metadados
 4. ⚡ Clique "Escolher por mim"
 5. 🎯 Execute primeira tarefa
 
@@ -953,11 +957,11 @@ Todos os dados salvos automaticamente em `localStorage` do navegador.
 
 ## 🙏 Créditos
 
-Desenvolvido para **Zen Eyer** (DJ, Produtor, Investidor) e outros neurodivergentes que precisam de sistema de nível corporativo com fricção zero.
+Desenvolvido para pessoas neurodivergentes que precisam de sistema de produtividade de nível corporativo com fricção zero.
 
-**Stack**: React + TypeScript + Tailwind CSS + localStorage
+**Stack**: React + TypeScript + Tailwind CSS + Supabase
 
-**Licença**: Uso pessoal
+**Licença**: MIT
 
 ---
 
@@ -971,4 +975,4 @@ Desenvolvido para **Zen Eyer** (DJ, Produtor, Investidor) e outros neurodivergen
 
 ---
 
-*Versão 1.0 - Janeiro 2026*
+*Versão 2.0 - Fevereiro 2026*
