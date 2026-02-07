@@ -1,4 +1,15 @@
-export type Domain = 'Urgente/Agora' | 'DJ & Carreira' | 'Grana' | 'Vida' | 'Incubadora';
+export type Domain =
+  | 'Trabalho'
+  | 'Finanças'
+  | 'Saúde'
+  | 'Casa'
+  | 'Relacionamentos'
+  | 'Pessoal'
+  | 'Aprendizado'
+  | 'Projetos'
+  | 'Admin';
+
+export type LegacyDomain = 'Urgente/Agora' | 'DJ & Carreira' | 'Grana' | 'Vida' | 'Incubadora';
 
 export type Size = 'Pequena' | 'Média' | 'Grande';
 
@@ -18,9 +29,9 @@ export interface Task {
   id: string;
   title: string;
   domain: Domain;
-  impact: number; // 1-5
-  urgency: number; // 1-5
-  emotionalCost: number; // 1-5
+  impact: number;
+  urgency: number;
+  emotionalCost: number;
   emotionalType?: EmotionalType;
   size: Size;
   deadline?: string;
@@ -43,3 +54,11 @@ export interface TaskFormData {
   deadline?: string;
   tags: Tag[];
 }
+
+export interface StorageData {
+  schemaVersion: number;
+  exportedAt?: string;
+  tasks: Task[];
+}
+
+export const CURRENT_SCHEMA_VERSION = 2;

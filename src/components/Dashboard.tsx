@@ -15,7 +15,6 @@ import {
 import { TaskCard } from './TaskCard';
 import { EmotionalTaskModal } from './EmotionalTaskModal';
 import { BreakdownModal } from './BreakdownModal';
-import { calculatePriority } from '../utils/priority';
 
 export function Dashboard() {
   const { tasks, getTasksByStatus, moveToStatus, getRecommendedTasks } = useTasks();
@@ -26,7 +25,6 @@ export function Dashboard() {
 
   const agoraTasks = getTasksByStatus('agora');
   const emAndamentoTasks = getTasksByStatus('em_andamento');
-  const recomendadasTasks = getTasksByStatus('recomendadas');
   const completedTasks = getTasksByStatus('concluida');
 
   const allActiveTasks = tasks.filter(
@@ -34,11 +32,15 @@ export function Dashboard() {
   );
 
   const domainTasks: Record<Domain, Task[]> = {
-    'Urgente/Agora': [],
-    'DJ & Carreira': [],
-    'Grana': [],
-    'Vida': [],
-    'Incubadora': [],
+    'Trabalho': [],
+    'Finanças': [],
+    'Saúde': [],
+    'Casa': [],
+    'Relacionamentos': [],
+    'Pessoal': [],
+    'Aprendizado': [],
+    'Projetos': [],
+    'Admin': [],
   };
 
   allActiveTasks.forEach((task) => {
@@ -77,14 +79,6 @@ export function Dashboard() {
 
   const canAddToAgora = agoraTasks.length < 2;
   const canAddToEmAndamento = emAndamentoTasks.length < 1;
-
-  const displayedTasks = paretoMode
-    ? allActiveTasks
-        .map((task) => ({ task, priority: calculatePriority(task) }))
-        .sort((a, b) => b.priority - a.priority)
-        .slice(0, Math.ceil(allActiveTasks.length * 0.2))
-        .map((item) => item.task)
-    : allActiveTasks;
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6">
