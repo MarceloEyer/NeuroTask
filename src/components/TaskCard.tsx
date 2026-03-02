@@ -5,8 +5,7 @@ import {
   Check,
   Clock,
   ListChecks,
-  AlertCircle,
-  ChevronRight,
+  AlertCircle ,
 } from 'lucide-react';
 import {
   getTaskIcon,
