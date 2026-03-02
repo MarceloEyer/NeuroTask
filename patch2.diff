@@ -1,0 +1,27 @@
+--- src/components/TaskCard.tsx
++++ src/components/TaskCard.tsx
+@@ -10,6 +10,7 @@
+   getTaskIcon,
+   getDaysUntilDeadline,
+   shouldBreakDown,
+   calculatePriority,
++  getDeadlineText,
+ } from '../utils/priority';
+
+ interface TaskCardProps {
+@@ -91,13 +92,7 @@
+       {daysUntilDeadline !== null && (
+         <div className="flex items-center gap-1 text-sm mb-2">
+           <Clock className="w-4 h-4 text-orange-600" />
+           <span className={daysUntilDeadline <= 3 ? 'text-orange-600 font-medium' : 'text-slate-600'}>
+-            {daysUntilDeadline === 0
+-              ? 'Hoje'
+-              : daysUntilDeadline === 1
+-              ? 'Amanhã'
+-              : daysUntilDeadline < 0
+-              ? `Atrasado ${Math.abs(daysUntilDeadline)}d`
+-              : `${daysUntilDeadline} dias`}
++            {getDeadlineText(daysUntilDeadline)}
+           </span>
+         </div>
+       )}

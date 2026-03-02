@@ -1,0 +1,10 @@
+--- src/components/BreakdownModal.tsx
++++ src/components/BreakdownModal.tsx
+@@ -1,6 +1,6 @@
+ import React, { useState } from 'react';
+ import { Task } from '../types';
+-import { X, Plus, Trash2 } from 'lucide-react';
++import { X, Plus } from 'lucide-react';
+
+ interface BreakdownModalProps {
+   task: Task;

@@ -1,0 +1,26 @@
+--- src/components/TaskCard.tsx
++++ src/components/TaskCard.tsx
+@@ -5,7 +5,6 @@
+   Clock,
+   ListChecks,
+   AlertCircle,
+-  ChevronRight,
+ } from 'lucide-react';
+ import {
+   getTaskIcon,
+@@ -93,13 +92,7 @@
+       {daysUntilDeadline !== null && (
+         <div className="flex items-center gap-1 text-sm mb-2">
+           <Clock className="w-4 h-4 text-orange-600" />
+           <span className={daysUntilDeadline <= 3 ? 'text-orange-600 font-medium' : 'text-slate-600'}>
+-            {daysUntilDeadline === 0
+-              ? 'Hoje'
+-              : daysUntilDeadline === 1
+-              ? 'Amanhã'
+-              : daysUntilDeadline < 0
+-              ? `Atrasado ${Math.abs(daysUntilDeadline)}d`
+-              : `${daysUntilDeadline} dias`}
++            {getDeadlineText(daysUntilDeadline)}
+           </span>
+         </div>
+       )}

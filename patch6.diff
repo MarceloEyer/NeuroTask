@@ -1,0 +1,18 @@
+--- src/components/Dashboard.tsx
++++ src/components/Dashboard.tsx
+@@ -26,7 +26,6 @@
+
+   const emAndamentoTasks = tasks.filter((t) => t.status === 'em_andamento');
+   const agoraTasks = tasks.filter((t) => t.status === 'agora');
+-  const recomendadasTasks = tasks.filter((t) => t.status === 'recomendadas');
+   const concluidaTasks = tasks.filter((t) => t.status === 'concluida');
+
+   const activeDomainTasks =
+@@ -78,8 +77,6 @@
+         return task.status === 'agora';
+       case 'em_andamento':
+         return task.status === 'em_andamento';
+-      default:
+-        return true;
+     }
+   });
