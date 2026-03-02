@@ -26,12 +26,19 @@ export function Dashboard() {
 
   const agoraTasks = getTasksByStatus('agora');
   const emAndamentoTasks = getTasksByStatus('em_andamento');
-  const recomendadasTasks = getTasksByStatus('recomendadas');
-  const completedTasks = getTasksByStatus('concluida');
+    const completedTasks = getTasksByStatus('concluida');
 
   const allActiveTasks = tasks.filter(
     (t) => t.status !== 'inbox' && t.status !== 'concluida' && t.status !== 'adiada'
   );
+
+    const displayedTasks = paretoMode
+    ? allActiveTasks
+        .map((task) => ({ task, priority: calculatePriority(task) }))
+        .sort((a, b) => b.priority - a.priority)
+        .slice(0, Math.ceil(allActiveTasks.length * 0.2))
+        .map((item) => item.task)
+    : allActiveTasks;
 
   const domainTasks: Record<Domain, Task[]> = {
     'Urgente/Agora': [],
@@ -41,7 +48,7 @@ export function Dashboard() {
     'Incubadora': [],
   };
 
-  allActiveTasks.forEach((task) => {
+  displayedTasks.forEach((task) => {
     if (task.status !== 'agora' && task.status !== 'em_andamento') {
       domainTasks[task.domain].push(task);
     }
@@ -78,13 +85,6 @@ export function Dashboard() {
   const canAddToAgora = agoraTasks.length < 2;
   const canAddToEmAndamento = emAndamentoTasks.length < 1;
 
-  const displayedTasks = paretoMode
-    ? allActiveTasks
-        .map((task) => ({ task, priority: calculatePriority(task) }))
-        .sort((a, b) => b.priority - a.priority)
-        .slice(0, Math.ceil(allActiveTasks.length * 0.2))
-        .map((item) => item.task)
-    : allActiveTasks;
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6">
