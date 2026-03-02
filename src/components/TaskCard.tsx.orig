@@ -6,6 +6,7 @@ import {
   Clock,
   ListChecks,
   AlertCircle,
+  ChevronRight,
 } from 'lucide-react';
 import {
   getTaskIcon,
@@ -92,7 +93,13 @@ export function TaskCard({
         <div className="flex items-center gap-1 text-sm mb-2">
           <Clock className="w-4 h-4 text-orange-600" />
           <span className={daysUntilDeadline <= 3 ? 'text-orange-600 font-medium' : 'text-slate-600'}>
-            {getDeadlineText(daysUntilDeadline)}
+            {daysUntilDeadline === 0
+              ? 'Hoje'
+              : daysUntilDeadline === 1
+              ? 'Amanhã'
+              : daysUntilDeadline < 0
+              ? `Atrasado ${Math.abs(daysUntilDeadline)}d`
+              : `${daysUntilDeadline} dias`}
           </span>
         </div>
       )}
