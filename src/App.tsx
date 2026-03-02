@@ -3,6 +3,7 @@ import { Inbox } from './components/Inbox';
 import { Dashboard } from './components/Dashboard';
 import { useTasks } from './hooks/useTasks';
 import { Inbox as InboxIcon, LayoutDashboard, Download, Upload } from 'lucide-react';
+import { NavButton } from './components/NavButton';
 
 function App() {
   const [currentView, setCurrentView] = useState<'inbox' | 'dashboard'>('dashboard');
@@ -36,28 +37,20 @@ function App() {
             </div>
 
             <div className="flex items-center gap-2">
-              <button
+              <NavButton
+                active={currentView === 'dashboard'}
                 onClick={() => setCurrentView('dashboard')}
-                className={`px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 ${
-                  currentView === 'dashboard'
-                    ? 'bg-slate-700 text-white'
-                    : 'text-slate-600 hover:bg-slate-100'
-                }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
                 Dashboard
-              </button>
-              <button
+              </NavButton>
+              <NavButton
+                active={currentView === 'inbox'}
                 onClick={() => setCurrentView('inbox')}
-                className={`px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 ${
-                  currentView === 'inbox'
-                    ? 'bg-slate-700 text-white'
-                    : 'text-slate-600 hover:bg-slate-100'
-                }`}
               >
                 <InboxIcon className="w-4 h-4" />
                 Inbox
-              </button>
+              </NavButton>
 
               <div className="ml-4 flex items-center gap-2 border-l border-slate-200 pl-4">
                 <button
