@@ -6,8 +6,7 @@ import {
   Clock,
   ListChecks,
   AlertCircle,
-  ChevronRight,
-} from 'lucide-react';
+  } from 'lucide-react';
 import {
   getTaskIcon,
   getDaysUntilDeadline,
