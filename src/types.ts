@@ -6,6 +6,8 @@ export type Status = 'inbox' | 'agora' | 'em_andamento' | 'recomendadas' | 'conc
 
 export type Tag = 'RÁPIDO 5min' | 'FOCO 1h' | 'EXTERNO';
 
+export const AVAILABLE_TAGS: Tag[] = ['RÁPIDO 5min', 'FOCO 1h', 'EXTERNO'];
+
 export type EmotionalType = 'Cobrança' | 'Conflito' | 'Conversa difícil' | 'Outro';
 
 export interface ChecklistItem {
