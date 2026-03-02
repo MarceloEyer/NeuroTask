@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Task, Domain, Size, Tag, EmotionalType } from '../types';
+import { Task, Domain, Size, Tag, EmotionalType, AVAILABLE_TAGS } from '../types';
 import { useTasks } from '../hooks/useTasks';
 import { Inbox as InboxIcon, Plus, ArrowRight, Edit2, Trash2 } from 'lucide-react';
 
@@ -231,7 +231,7 @@ export function Inbox() {
                   Tags Rápidas
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {(['RÁPIDO 5min', 'FOCO 1h', 'EXTERNO'] as Tag[]).map((tag) => (
+                  {AVAILABLE_TAGS.map((tag) => (
                     <button
                       key={tag}
                       onClick={() => toggleTag(tag)}
