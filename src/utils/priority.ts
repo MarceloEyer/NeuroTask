@@ -58,3 +58,10 @@ export function getMessageTemplate(emotionalType?: string): string {
   }
   return '';
 }
+
+export function sortTasksByPriority(tasks: Task[]): Task[] {
+  return [...tasks]
+    .map((task) => ({ task, priority: calculatePriority(task) }))
+    .sort((a, b) => b.priority - a.priority)
+    .map((item) => item.task);
+}

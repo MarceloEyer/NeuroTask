@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Task, TaskFormData, Status, ChecklistItem } from '../types';
-import { calculatePriority } from '../utils/priority';
+import { sortTasksByPriority } from '../utils/priority';
 
 const STORAGE_KEY = 'zen-productivity-tasks';
 
@@ -171,14 +171,7 @@ export function useTasks() {
       (task) => task.status !== 'concluida' && task.status !== 'adiada' && task.status !== 'inbox'
     );
 
-    return activeTasks
-      .map((task) => ({
-        task,
-        priority: calculatePriority(task),
-      }))
-      .sort((a, b) => b.priority - a.priority)
-      .slice(0, 5)
-      .map((item) => item.task);
+    return sortTasksByPriority(activeTasks).slice(0, 5);
   };
 
   return {
