@@ -15,7 +15,7 @@ import {
 import { TaskCard } from './TaskCard';
 import { EmotionalTaskModal } from './EmotionalTaskModal';
 import { BreakdownModal } from './BreakdownModal';
-import { calculatePriority } from '../utils/priority';
+
 
 export function Dashboard() {
   const { tasks, getTasksByStatus, moveToStatus, getRecommendedTasks } = useTasks();
@@ -26,8 +26,7 @@ export function Dashboard() {
 
   const agoraTasks = getTasksByStatus('agora');
   const emAndamentoTasks = getTasksByStatus('em_andamento');
-  const recomendadasTasks = getTasksByStatus('recomendadas');
-  const completedTasks = getTasksByStatus('concluida');
+    const completedTasks = getTasksByStatus('concluida');
 
   const allActiveTasks = tasks.filter(
     (t) => t.status !== 'inbox' && t.status !== 'concluida' && t.status !== 'adiada'
@@ -78,13 +77,7 @@ export function Dashboard() {
   const canAddToAgora = agoraTasks.length < 2;
   const canAddToEmAndamento = emAndamentoTasks.length < 1;
 
-  const displayedTasks = paretoMode
-    ? allActiveTasks
-        .map((task) => ({ task, priority: calculatePriority(task) }))
-        .sort((a, b) => b.priority - a.priority)
-        .slice(0, Math.ceil(allActiveTasks.length * 0.2))
-        .map((item) => item.task)
-    : allActiveTasks;
+
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6">
