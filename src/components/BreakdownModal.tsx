@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTasks } from '../hooks/useTasks';
-import { X, ListChecks, Plus, Trash2 } from 'lucide-react';
+import { X, ListChecks, Plus } from 'lucide-react';
 
 interface BreakdownModalProps {
   taskId: string;
