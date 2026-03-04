@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Task, TaskFormData, Status, ChecklistItem } from '../types';
+import { Task, TaskFormData, Status, ChecklistItem, Domain, Size, EmotionalType, Tag } from '../types';
 import { calculatePriority } from '../utils/priority';
 
 const STORAGE_KEY = 'zen-productivity-tasks';
+
+export const MAX_IMPORT_SIZE = 2 * 1024 * 1024; // 2MB
+export const MAX_TASKS = 1000;
+
 
 const seedTasks: Task[] = [
   {
@@ -60,6 +64,69 @@ const seedTasks: Task[] = [
     createdAt: new Date().toISOString(),
   },
 ];
+
+
+export const parseTask = (task: Record<string, unknown>): Task | null => {
+  if (!task || typeof task !== 'object' || Array.isArray(task)) return null;
+
+  // Essential fields checks
+  if (
+    typeof task.id !== 'string' ||
+    typeof task.title !== 'string' ||
+    typeof task.domain !== 'string' ||
+    typeof task.size !== 'string' ||
+    typeof task.status !== 'string' ||
+    typeof task.createdAt !== 'string'
+  ) {
+    return null;
+  }
+
+  // Sanitize checklist
+  let sanitizedChecklist: ChecklistItem[] = [];
+  if (Array.isArray(task.checklist)) {
+    sanitizedChecklist = task.checklist.reduce((acc: ChecklistItem[], item: Record<string, unknown>) => {
+      if (
+        item &&
+        typeof item === 'object' &&
+        typeof item.id === 'string' &&
+        typeof item.text === 'string' &&
+        typeof item.completed === 'boolean'
+      ) {
+        acc.push({
+          id: item.id,
+          text: item.text,
+          completed: item.completed,
+        });
+      }
+      return acc;
+    }, []);
+  }
+
+  // Sanitize tags
+  let sanitizedTags: Tag[] = [];
+  if (Array.isArray(task.tags)) {
+    sanitizedTags = (task.tags as unknown[]).filter((tag): tag is Tag => typeof tag === 'string');
+  }
+
+  return {
+    id: task.id,
+    title: task.title,
+    domain: task.domain as Domain,
+    impact: Math.min(Math.max(Number(task.impact) || 1, 1), 5),
+    urgency: Math.min(Math.max(Number(task.urgency) || 1, 1), 5),
+    emotionalCost: Math.min(Math.max(Number(task.emotionalCost) || 1, 1), 5),
+    emotionalType: typeof task.emotionalType === 'string' ? (task.emotionalType as EmotionalType) : undefined,
+    size: task.size as Size,
+    deadline: typeof task.deadline === 'string' ? task.deadline : undefined,
+    tags: sanitizedTags,
+    status: task.status as Status,
+    checklist: sanitizedChecklist,
+    createdAt: task.createdAt,
+    completedAt: typeof task.completedAt === 'string' ? task.completedAt : undefined,
+    deferReason: typeof task.deferReason === 'string' ? task.deferReason : undefined,
+  };
+};
+
 
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>(() => {
@@ -155,10 +222,27 @@ export function useTasks() {
     try {
       const imported = JSON.parse(jsonData);
       if (Array.isArray(imported)) {
-        setTasks(imported);
+        if (imported.length > MAX_TASKS) {
+          alert('Erro: O arquivo excede o limite máximo de ' + MAX_TASKS + ' tarefas.');
+          return;
+        }
+
+        const validTasks = imported
+          .map(parseTask)
+          .filter((task): task is Task => task !== null);
+
+        if (validTasks.length > 0) {
+          setTasks(validTasks);
+          alert('Dados importados com sucesso! ' + validTasks.length + ' tarefas válidas carregadas.');
+        } else {
+          alert('Erro: Nenhuma tarefa válida encontrada no arquivo.');
+        }
+      } else {
+        alert('Erro: Formato de arquivo inválido. É esperado um array de tarefas.');
       }
     } catch (error) {
       console.error('Failed to import data:', error);
+      alert('Erro ao processar o arquivo. Verifique se o formato está correto.');
     }
   };
 
