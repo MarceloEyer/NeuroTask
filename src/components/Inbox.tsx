@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Task, Domain, Size, Tag, EmotionalType } from '../types';
+import { Task, Domain, Size, Tag, EmotionalType, DOMAINS } from '../types';
 import { useTasks } from '../hooks/useTasks';
 import { Inbox as InboxIcon, Plus, ArrowRight, Edit2, Trash2 } from 'lucide-react';
 
@@ -120,11 +120,9 @@ export function Inbox() {
                 onChange={(e) => setFormData({ ...formData, domain: e.target.value as Domain })}
                 className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
               >
-                <option value="Urgente/Agora">Urgente/Agora</option>
-                <option value="DJ & Carreira">DJ & Carreira</option>
-                <option value="Grana">Grana</option>
-                <option value="Vida">Vida</option>
-                <option value="Incubadora">Incubadora</option>
+                {DOMAINS.map(domain => (
+                  <option key={domain} value={domain}>{domain}</option>
+                ))}
               </select>
             </div>
 
