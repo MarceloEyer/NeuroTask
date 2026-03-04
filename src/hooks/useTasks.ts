@@ -61,6 +61,8 @@ const seedTasks: Task[] = [
   },
 ];
 
+export const isActiveTask = (task: Task) => task.status !== 'concluida' && task.status !== 'adiada' && task.status !== 'inbox';
+
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -167,9 +169,7 @@ export function useTasks() {
   };
 
   const getRecommendedTasks = () => {
-    const activeTasks = tasks.filter(
-      (task) => task.status !== 'concluida' && task.status !== 'adiada' && task.status !== 'inbox'
-    );
+    const activeTasks = tasks.filter(isActiveTask);
 
     return activeTasks
       .map((task) => ({
