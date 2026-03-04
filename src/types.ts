@@ -1,4 +1,5 @@
-export type Domain = 'Urgente/Agora' | 'DJ & Carreira' | 'Grana' | 'Vida' | 'Incubadora';
+export const DOMAINS = ['Urgente/Agora', 'DJ & Carreira', 'Grana', 'Vida', 'Incubadora'] as const;
+export type Domain = typeof DOMAINS[number];
 
 export type Size = 'Pequena' | 'Média' | 'Grande';
 
