@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Inbox } from './components/Inbox';
 import { Dashboard } from './components/Dashboard';
-import { useTasks } from './hooks/useTasks';
+import { useTasks, MAX_IMPORT_SIZE } from './hooks/useTasks';
 import { Inbox as InboxIcon, LayoutDashboard, Download, Upload } from 'lucide-react';
 
 function App() {
@@ -15,6 +15,11 @@ function App() {
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
+        if (file.size > MAX_IMPORT_SIZE) {
+          alert('Erro: O arquivo é muito grande. O limite máximo é de 2MB.');
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = (event) => {
           const content = event.target?.result as string;
